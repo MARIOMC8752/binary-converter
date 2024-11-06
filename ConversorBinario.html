@@ -1,0 +1,203 @@
+<html><head><base href="." target="_blank">
+<style>
+  :root {
+    --primary: #2196F3;
+    --dark: #1976D2;
+    --light: #BBDEFB;
+    --accent: #FF4081;
+  }
+
+  body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--light), white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .converter-container {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    max-width: 500px;
+    width: 100%;
+  }
+
+  h1 {
+    color: var(--primary);
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .input-group {
+    margin-bottom: 1.5rem;
+  }
+
+  label {
+    display: block;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid var(--light);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+
+  input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+  }
+
+  button {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  button:hover {
+    background: var(--dark);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  }
+
+  .result {
+    text-align: center;
+    font-size: 1.2rem;
+    color: var(--dark);
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+    background: var(--light);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+  }
+
+  .result.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .error {
+    color: #f44336;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    display: none;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+
+  .animate-pulse {
+    animation: pulse 0.5s ease;
+  }
+</style>
+</head>
+<body>
+  <div class="converter-container">
+    <h1>🔢 Conversor Binario</h1>
+    
+    <div class="input-group">
+      <label for="decimal">Número Decimal:</label>
+      <input type="number" id="decimal" placeholder="Ingresa un número decimal">
+      <div class="error" id="decimal-error">Por favor ingresa un número válido</div>
+    </div>
+
+    <button id="decimalBtn">Convertir a Binario ⬇️</button>
+
+    <div class="input-group">
+      <label for="binary">Número Binario:</label>
+      <input type="text" id="binary" placeholder="Ingresa un número binario">
+      <div class="error" id="binary-error">Por favor ingresa un número binario válido (solo 0s y 1s)</div>
+    </div>
+
+    <button id="binaryBtn">Convertir a Decimal ⬆️</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function decimalToBinary() {
+      const decimal = document.getElementById('decimal').value;
+      const result = document.getElementById('result');
+      const error = document.getElementById('decimal-error');
+      
+      if (decimal === '' || isNaN(decimal)) {
+        error.style.display = 'block';
+        return;
+      }
+      
+      error.style.display = 'none';
+      const binary = Number(decimal).toString(2);
+      displayResult(`${decimal} en binario es: ${binary}`);
+    }
+
+    function binaryToDecimal() {
+      const binary = document.getElementById('binary').value;
+      const result = document.getElementById('result');
+      const error = document.getElementById('binary-error');
+      
+      if (!isBinary(binary)) {
+        error.style.display = 'block';
+        return;
+      }
+      
+      error.style.display = 'none';
+      const decimal = parseInt(binary, 2);
+      displayResult(`${binary} en decimal es: ${decimal}`);
+    }
+
+    function isBinary(num) {
+      return /^[01]+$/.test(num);
+    }
+
+    function displayResult(message) {
+      const result = document.getElementById('result');
+      result.textContent = message;
+      result.classList.remove('show');
+      result.classList.add('animate-pulse');
+      
+      void result.offsetWidth;
+      
+      result.classList.add('show');
+      
+      setTimeout(() => {
+        result.classList.remove('animate-pulse');
+      }, 500);
+    }
+
+    document.getElementById('decimalBtn').addEventListener('click', decimalToBinary);
+    document.getElementById('binaryBtn').addEventListener('click', binaryToDecimal);
+
+    document.getElementById('decimal').addEventListener('input', function() {
+      document.getElementById('decimal-error').style.display = 'none';
+    });
+
+    document.getElementById('binary').addEventListener('input', function() {
+      document.getElementById('binary-error').style.display = 'none';
+    });
+  </script>
+</body></html>
